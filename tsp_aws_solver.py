@@ -47,18 +47,18 @@ def random_dominating_set(neighbor_dict, source_index, number_of_kingdoms, node_
         prob = None
     order = np.random.choice(number_of_kingdoms, number_of_kingdoms, replace=False, p =prob)
     for chosen in order:
-        if chosen not in available:
-            continue
+        # if chosen not in available:
+        #     continue
         con.add(chosen)
         sur.add(chosen)
         sur.update(neighbor_dict[chosen])
-        available = available - sur
+        # available = available - sur
         if len(sur) >= number_of_kingdoms:
             return con
     return con
 
 def get_dom_prob(neighbor_dict, adjacency_matrix, number_of_kingdoms):
-    return [1*len(neighbor_dict[i])/(adjacency_matrix[i][i]) for i in range(number_of_kingdoms)]
+    return [(1+len(neighbor_dict[i]))/(adjacency_matrix[i][i]) for i in range(number_of_kingdoms)]
 
 def softmax(x, temp):
     """Compute softmax values for each sets of scores in x."""
@@ -87,7 +87,7 @@ def best_dominating_set(neighbor_dict, source_index, number_of_kingdoms, adjacen
             rep_check.add(val)
             heappush(all_dom, (val, dom_set))
     top10 = []
-    for i in range(6):
+    for i in range(8):
         if len(all_dom) == 0:
             break
         top10.append(heappop(all_dom))
