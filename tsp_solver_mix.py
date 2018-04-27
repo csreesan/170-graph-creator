@@ -42,23 +42,26 @@ def random_dominating_set(neighbor_dict, source_index, number_of_kingdoms, node_
     available = set(range(number_of_kingdoms))
     con = set()
     sur = set()
-    prob = softmax(node_prob, temp)
-    if (0 in prob):
-        prob = None
-    order = np.random.choice(number_of_kingdoms, number_of_kingdoms, replace=False, p =prob)
-    for chosen in order:
-        if chosen not in available:
+    while len(sur) < number_of_kingdoms:
+        prob = softmax(node_prob, temp)
+        p = prob
+        if (0 in prob):
+            p = None
+        chosen = np.random.choice(number_of_kingdoms, 1, replace=False, p=p)[0]
+        print(chosen)
+        if chosen in con:
+            node_prob[chosen] = node_prob[chosen] / (sum(node_prob))
             continue
         con.add(chosen)
         sur.add(chosen)
         sur.update(neighbor_dict[chosen])
-        available = available - sur
-        if len(sur) >= number_of_kingdoms:
-            return con
+        for i in neighbor_dict[chosen]:
+            node_prob[i] = node_prob[i] / (sum(node_prob)/2)
+        node_prob[chosen] = node_prob[chosen] / (sum(node_prob))
     return con
 
-def get_dom_prob(neighbor_dict, adjacency_matrix, number_of_kingdoms):
-    return [1*len(neighbor_dict[i])/(adjacency_matrix[i][i]) for i in range(number_of_kingdoms)]
+def get_dom_prob(neighbor_dict, neighbor_cost, adjacency_matrix, number_of_kingdoms):
+    return [(neighbor_cost[i])/(adjacency_matrix[i][i]) for i in range(number_of_kingdoms)]
 
 def softmax(x, temp):
     """Compute softmax values for each sets of scores in x."""
@@ -75,12 +78,12 @@ def dominating_set_value(adjacency_matrix, dom_set):
 
 
 
-def best_dominating_set(neighbor_dict, source_index, number_of_kingdoms, adjacency_matrix, temp):
-    node_prob = get_dom_prob(neighbor_dict, adjacency_matrix, number_of_kingdoms)
+def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp):
+    node_prob = get_dom_prob(neighbor_dict, neighbor_cost, adjacency_matrix, number_of_kingdoms)
 
     all_dom = []
     rep_check = set()
-    for i in range(30000):
+    for i in range(10):
         dom_set = random_dominating_set(neighbor_dict, source_index, number_of_kingdoms, node_prob, temp)
         val = dominating_set_value(adjacency_matrix, dom_set)
         if val not in rep_check:
@@ -190,12 +193,13 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, range_start, rang
                 poly_path = "./dict_poly2/"
 
             neighbor_dict = pickle.Unpickler(open( poly_path + "neighbors_dict/" + file_num + "_neighbors_dict.p", "rb" )).load()
+            neighbor_cost = pickle.Unpickler(open( poly_path + "neighbors_cost/" + file_num + "_neighbors_cost.p", "rb" )).load()
 
             dist_dict = pickle.Unpickler( open( poly_path + "shortest_dist_dict/" + file_num + "_dist_dict.p", "rb" ) ).load()
             path_dict = pickle.Unpickler( open( poly_path + "shortest_path_dict/" + file_num + "_path_dict.p", "rb" ) ).load()
             curr_best = output_cost(file_num, dist_dict, adjacency_matrix)
 
-            top10_dom = best_dominating_set(neighbor_dict, source_index, number_of_kingdoms, adjacency_matrix, temp)
+            top10_dom = best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp)
             for dom_cost, dom_set in top10_dom:
                 if dom_cost >= curr_best or len(dom_set) < 8:
                     print("Skipping: ", len(dom_set))
@@ -213,4 +217,5 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, range_start, rang
                     best_solution = (dom_cost+cycle_cost, cycle_path, dom_set)
                     write_output(file_num, best_solution, list_of_kingdom_names, path_dict, write_to)
                     break;
+
             

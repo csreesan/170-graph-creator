@@ -49,18 +49,18 @@ for file_name in all_input_files:
 
 
 
-    neighbors_dict_file_name = "./dict_poly2/neighbors_dict/" + file_num + "_" + neigbhors_dict_name
-    neighbors_cost_file_name = "./dict_poly2/neighbors_cost/" + file_num + "_" + neighbors_cost_name
+    # neighbors_dict_file_name = "./neighbors_dict/" + file_num + "_" + neigbhors_dict_name
+    neighbors_cost_file_name = "./neighbors_cost/" + file_num + "_" + neighbors_cost_name
 
     neighbor_dict = dict()
     neighbor_cost_dict = dict()
     for i in range(number_of_kingdoms):
         neighbor_dict[i] = list(G.neighbors(i))
         total = 0
-        # for j in neighbor_dict[i]:
-        #     total += adjacency_matrix[j][j]
-        # neighbor_cost_dict[i] = total
+        for j in neighbor_dict[i]:
+            total += adjacency_matrix[j][j]
+        neighbor_cost_dict[i] = total
 
-    pickle.dump( neighbor_dict, open( neighbors_dict_file_name, "wb" ), protocol = 2 )
-    # pickle.dump( neighbor_cost_dict, open( neighbors_cost_file_name, "wb" ) )
+    # pickle.dump( neighbor_dict, open( neighbors_dict_file_name, "wb" ), protocol = 2 )
+    pickle.dump( neighbor_cost_dict, open( neighbors_cost_file_name, "wb" ) )
     print(file_num, " done")
