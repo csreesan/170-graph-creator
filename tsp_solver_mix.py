@@ -57,7 +57,7 @@ def random_dominating_set(neighbor_dict, source_index, number_of_kingdoms, node_
         sur.update(neighbor_dict[chosen])
         for i in neighbor_dict[chosen]:
             node_prob[i] = node_prob[i] / (sum(node_prob)/2)
-        node_prob[chosen] = node_prob[chosen] / (sum(node_prob))
+        node_prob[chosen] = node_prob[chosen] / (sum(node_prob)*10)
     return con
 
 def get_dom_prob(neighbor_dict, neighbor_cost, adjacency_matrix, number_of_kingdoms):
