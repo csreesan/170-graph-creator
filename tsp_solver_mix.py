@@ -10,6 +10,8 @@ from student_utils_sp18 import *
 import numpy as np
 import pickle
 from rutgers_tsp import solve_for_cycle
+import operator
+import itertools
 
 
 
@@ -37,31 +39,34 @@ def output_cost(file_num, dist_dict, adjacency_matrix):
 
 
 
-def random_dominating_set(neighbor_dict, source_index, number_of_kingdoms, node_prob, temp):
-
+def random_dominating_set(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms):
+    neigh_cost_copy = dict(neighbor_cost)
+    random.seed(random.random())
+    updated = [0] * number_of_kingdoms
     available = set(range(number_of_kingdoms))
     con = set()
     sur = set()
     while len(sur) < number_of_kingdoms:
-        prob = softmax(node_prob, temp)
-        p = prob
-        if (0 in prob):
-            p = None
-        chosen = np.random.choice(number_of_kingdoms, 1, replace=False, p=p)[0]
-        print(chosen)
-        if chosen in con:
-            node_prob[chosen] = node_prob[chosen] / (sum(node_prob))
-            continue
+        max_val = max(neigh_cost_copy.items(), key=operator.itemgetter(1))[1]
+        all_max = [k for k in neigh_cost_copy if neigh_cost_copy[k] == max_val]
+        chosen = all_max[random.randint(0,len(all_max) - 1)]
         con.add(chosen)
         sur.add(chosen)
-        sur.update(neighbor_dict[chosen])
-        for i in neighbor_dict[chosen]:
-            node_prob[i] = node_prob[i] / (sum(node_prob)/2)
-        node_prob[chosen] = node_prob[chosen] / (sum(node_prob)*10)
-    return con
+        neighbors = neighbor_dict[chosen]
+        updator = neighbors + [chosen]
+        for n in updator:
+            if not updated[n]:
+                updated[n] = 1
+                for i in neighbor_dict[n]:
+                    if i in neigh_cost_copy:
+                        neigh_cost_copy[i] -= adjacency_matrix[n][n]
 
-def get_dom_prob(neighbor_dict, neighbor_cost, adjacency_matrix, number_of_kingdoms):
-    return [(neighbor_cost[i])/(adjacency_matrix[i][i]) for i in range(number_of_kingdoms)]
+        sur.update(neighbors)
+        neigh_cost_copy.pop(chosen, None)
+    return frozenset(con)
+
+# def get_dom_prob(neighbor_dict, neighbor_cost, adjacency_matrix, number_of_kingdoms):
+#     return [(neighbor_cost[i])/(adjacency_matrix[i][i]) for i in range(number_of_kingdoms)]
 
 def softmax(x, temp):
     """Compute softmax values for each sets of scores in x."""
@@ -79,21 +84,21 @@ def dominating_set_value(adjacency_matrix, dom_set):
 
 
 def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp):
-    node_prob = get_dom_prob(neighbor_dict, neighbor_cost, adjacency_matrix, number_of_kingdoms)
 
     all_dom = []
     rep_check = set()
     for i in range(5000):
-        dom_set = random_dominating_set(neighbor_dict, source_index, number_of_kingdoms, node_prob, temp)
+        dom_set = random_dominating_set(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
         val = dominating_set_value(adjacency_matrix, dom_set)
-        if val not in rep_check:
-            rep_check.add(val)
+        if dom_set not in rep_check:
+            rep_check.add(dom_set)
             heappush(all_dom, (val, dom_set))
     top10 = []
     for i in range(6):
         if len(all_dom) == 0:
             break
         top10.append(heappop(all_dom))
+    print("TOP10: ", top10)
     return top10
 
 
@@ -201,10 +206,24 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, range_start, rang
 
             top10_dom = best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp)
             for dom_cost, dom_set in top10_dom:
-                if dom_cost >= curr_best or len(dom_set) < 8:
+                if dom_cost >= curr_best:
                     print("Skipping: ", len(dom_set))
                     continue
-                cycle_tup = best_cycle(dist_dict, dom_set, source_index)
+                cycle_tup = None
+                if len(dom_set) < 10:
+                    
+                    dom_list = list(dom_set)
+                    if source_index in dom_set:
+                        dom_list.remove(source_index)
+                    perm = list(itertools.permutations(dom_list))
+                    for p in perm:
+                        cycle = [source_index] + list(p) + [source_index]
+                        val = cylce_val(dist_dict, cycle)
+                        if cycle_tup is None or cycle_tup[0] > val:
+                            cycle_tup = (val, cycle)
+                else:
+                    cycle_tup = best_cycle(dist_dict, dom_set, source_index)
+                    
                 cycle_cost = cycle_tup[0]
                 cycle_path = cycle_tup[1]
                 val = dom_cost + cycle_cost    
@@ -217,5 +236,6 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, range_start, rang
                     best_solution = (dom_cost+cycle_cost, cycle_path, dom_set)
                     write_output(file_num, best_solution, list_of_kingdom_names, path_dict, write_to)
                     break;
+                
 
             
