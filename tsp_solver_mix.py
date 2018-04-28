@@ -110,6 +110,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
 def best_cycle(dist_dict, dom_set, source_index):
 
     has_source = True
+    dom_set = set(dom_set)
     if source_index not in dom_set:
         dom_set.add(source_index)
         has_source = False
@@ -223,7 +224,7 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, range_start, rang
                             cycle_tup = (val, cycle)
                 else:
                     cycle_tup = best_cycle(dist_dict, dom_set, source_index)
-                    
+
                 cycle_cost = cycle_tup[0]
                 cycle_path = cycle_tup[1]
                 val = dom_cost + cycle_cost    
