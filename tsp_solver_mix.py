@@ -94,7 +94,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
             rep_check.add(dom_set)
             heappush(all_dom, (val, dom_set))
     top10 = []
-    for i in range(6):
+    for i in range(10):
         if len(all_dom) == 0:
             break
         top10.append(heappop(all_dom))
