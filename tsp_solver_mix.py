@@ -41,6 +41,8 @@ def output_cost(file_num, dist_dict, adjacency_matrix):
 
 def random_dominating_set(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms):
     neigh_cost_copy = dict(neighbor_cost)
+    for i in range(number_of_kingdoms):
+        neigh_cost_copy[i] -= adjacency_matrix[i][i]
     random.seed(random.random())
     updated = [0] * number_of_kingdoms
     available = set(range(number_of_kingdoms))
