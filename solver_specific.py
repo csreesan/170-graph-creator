@@ -311,6 +311,7 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, file_list):
 
             top10_dom = best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp, curr_best)
             for dom_cost, dom_set in top10_dom:
+                print("DOM_COST:", dom_cost)
                 if dom_cost >= curr_best:
                     print("Skipping: ", len(dom_set))
                     continue
@@ -331,7 +332,8 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, file_list):
 
                 cycle_cost = cycle_tup[0]
                 cycle_path = cycle_tup[1]
-                val = dom_cost + cycle_cost    
+                val = dom_cost + cycle_cost
+                print("final val:", val)    
                 if curr_best > val:
                     with open(beaten_file, "a") as file_beat:
                         file_beat.write(file_num + "\n")
