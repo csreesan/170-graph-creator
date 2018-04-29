@@ -179,70 +179,71 @@ def write_output(file_num, solution, list_of_kingdom_names, path_dict, write_to)
 
 ######################################## SOLVER ##################
 def solver(curr_file, iter_file, beaten_file, write_to, poly2, file_list):
-    for j in range(10000):
-        with open(iter_file, "a") as file_iter:
-            file_iter.write(str(j) + "\n")  
 
-        file_names = []
-        for i in file_list:
-            file_names.append(str(i) + ".in")
+    file_names = []
+    for i in file_list:
+        file_names.append(str(i) + ".in")
 
-        for file_name in file_names:
-            print("#########################")
-            print(file_name)
-            print("#########################")
-            input_data = utils.read_file("./inputs/" + file_name)
-            number_of_kingdoms, list_of_kingdom_names, starting_kingdom, adjacency_matrix = data_parser(input_data)
-            source_index = list_of_kingdom_names.index(starting_kingdom)
+    for file_name in file_names:
+        print("#########################")
+        print(file_name)
+        print("#########################")
+        input_data = utils.read_file("./inputs/" + file_name)
+        number_of_kingdoms, list_of_kingdom_names, starting_kingdom, adjacency_matrix = data_parser(input_data)
+        source_index = list_of_kingdom_names.index(starting_kingdom)
 
-            temp = 1
-            file_num = file_name.split(".")[0]
-            with open(curr_file, "a") as file_curr:
-                file_curr.write(file_num + "\n")  
+        temp = 1
+        file_num = file_name.split(".")[0]
+        with open(curr_file, "a") as file_curr:
+            file_curr.write(file_num + "\n")  
 
-            poly_path = "./"
-            if poly2:
-                poly_path = "./dict_poly2/"
+        poly_path = "./"
+        if poly2:
+            poly_path = "./dict_poly2/"
 
-            neighbor_dict = pickle.Unpickler(open( poly_path + "neighbors_dict/" + file_num + "_neighbors_dict.p", "rb" )).load()
-            neighbor_cost = pickle.Unpickler(open( poly_path + "neighbors_cost/" + file_num + "_neighbors_cost.p", "rb" )).load()
+        neighbor_dict = pickle.Unpickler(open( poly_path + "neighbors_dict/" + file_num + "_neighbors_dict.p", "rb" )).load()
+        neighbor_cost = pickle.Unpickler(open( poly_path + "neighbors_cost/" + file_num + "_neighbors_cost.p", "rb" )).load()
 
-            dist_dict = pickle.Unpickler( open( poly_path + "shortest_dist_dict/" + file_num + "_dist_dict.p", "rb" ) ).load()
-            path_dict = pickle.Unpickler( open( poly_path + "shortest_path_dict/" + file_num + "_path_dict.p", "rb" ) ).load()
-            curr_best = output_cost(file_num, dist_dict, adjacency_matrix)
-            print("CUR BEST:", curr_best)
+        dist_dict = pickle.Unpickler( open( poly_path + "shortest_dist_dict/" + file_num + "_dist_dict.p", "rb" ) ).load()
+        path_dict = pickle.Unpickler( open( poly_path + "shortest_path_dict/" + file_num + "_path_dict.p", "rb" ) ).load()
+        curr_best = output_cost(file_num, dist_dict, adjacency_matrix)
+        print("CUR BEST:", curr_best)
 
-            all_nodes = list(range(number_of_kingdoms))
-            rep = set()
-            for order in itertools.permutations(all_nodes):
-                dom_set = get_dominating_set(neighbor_dict, order, number_of_kingdoms)
-                dom_cost = dominating_set_value(adjacency_matrix, dom_set)
-                if dom_cost >= curr_best or dom_set in rep:
-                    continue
-                rep.add(dom_set)
-                if len(dom_set) > 14:
-                    continue
-                perm = itertools.permutations(list(dom_set))
-                cycle_tup=None
-                for p in perm:
-                    cycle = [source_index] + list(p) + [source_index]
-                    val = cylce_val(dist_dict, cycle)
-                    if cycle_tup is None or cycle_tup[0] > val:
-                        cycle_tup = (val, cycle)
+        all_nodes = list(range(number_of_kingdoms))
+        rep = set()
+        j = 0
+        for order in itertools.permutations(all_nodes):
+            j += 1
+            with open(iter_file, "w") as file_iter:
+                file_iter.write(str(j) + "\n")  
+            dom_set = get_dominating_set(neighbor_dict, order, number_of_kingdoms)
+            dom_cost = dominating_set_value(adjacency_matrix, dom_set)
+            if dom_cost >= curr_best or dom_set in rep:
+                continue
+            rep.add(dom_set)
+            if len(dom_set) > 14:
+                continue
+            perm = itertools.permutations(list(dom_set))
+            cycle_tup=None
+            for p in perm:
+                cycle = [source_index] + list(p) + [source_index]
+                val = cylce_val(dist_dict, cycle)
+                if cycle_tup is None or cycle_tup[0] > val:
+                    cycle_tup = (val, cycle)
 
 
-                cycle_cost = cycle_tup[0]
-                cycle_path = cycle_tup[1]
-                val = dom_cost + cycle_cost
-                if curr_best > val:
-                    with open(beaten_file, "a") as file_beat:
-                        file_beat.write(file_num + "\n")
-                        file_beat.write("curr_best: " + str(curr_best) + "\n")
-                        file_beat.write("new_best: "+ str(val) + "\n" + "\n")
-                        print("write")
-                    best_solution = (dom_cost+cycle_cost, cycle_path, dom_set)
-                    curr_best = val
-                    write_output(file_num, best_solution, list_of_kingdom_names, path_dict, write_to)
+            cycle_cost = cycle_tup[0]
+            cycle_path = cycle_tup[1]
+            val = dom_cost + cycle_cost
+            if curr_best > val:
+                with open(beaten_file, "a") as file_beat:
+                    file_beat.write(file_num + "\n")
+                    file_beat.write("curr_best: " + str(curr_best) + "\n")
+                    file_beat.write("new_best: "+ str(val) + "\n" + "\n")
+                    print("write")
+                best_solution = (dom_cost+cycle_cost, cycle_path, dom_set)
+                curr_best = val
+                write_output(file_num, best_solution, list_of_kingdom_names, path_dict, write_to)
                 
 
   
