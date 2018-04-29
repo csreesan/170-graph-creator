@@ -1,4 +1,5 @@
-from tsp_solver_mix import solver
+from solver_specific import solver
 
+file_list = ['164', '165', '168', '169', '175', '178', '180', '181', '182', '198', '201', '202', '203', '215', '220', '230', '234', '235', '236', '238', '239']
 
-solver("./curr_hive3.txt", "./iter_hive3.txt", "./beaten_hive3.txt", "./outputs/", False, 200, 300)
+solver("./curr_hive3.txt", "./iter_hive3.txt", "./beaten_hive3.txt", "./outputs/", False, file_list)
