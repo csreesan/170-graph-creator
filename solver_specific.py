@@ -139,7 +139,7 @@ def random_dominating_set4(neighbor_dict, neighbor_cost, adjacency_matrix, sourc
     sur = set()
     random.seed(random.random())
     while len(sur) < number_of_kingdoms:
-        chosen = random.randint(0, len(available) - 1)
+        chosen = list(available)[random.randint(0, len(available) - 1)]
         con.add(chosen)
         sur.add(chosen)
         sur.update(neighbor_dict[chosen])
