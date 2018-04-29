@@ -308,6 +308,7 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, file_list):
             dist_dict = pickle.Unpickler( open( poly_path + "shortest_dist_dict/" + file_num + "_dist_dict.p", "rb" ) ).load()
             path_dict = pickle.Unpickler( open( poly_path + "shortest_path_dict/" + file_num + "_path_dict.p", "rb" ) ).load()
             curr_best = output_cost(file_num, dist_dict, adjacency_matrix)
+            print("CUR BEST:", curr_best)
 
             top10_dom = best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp, curr_best)
             for dom_cost, dom_set in top10_dom:
