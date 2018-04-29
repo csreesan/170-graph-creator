@@ -77,7 +77,7 @@ def random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, sourc
     for i in range(number_of_kingdoms):
         neigh_cost_copy[i] -= adjacency_matrix[i][i]
         ### Extra Randomness ###
-        neigh_cost_copy[i] *= random.uniform(0.4,1)
+        neigh_cost_copy[i] =  neigh_cost_copy[i] * random.uniform(0.1,1)
         ####
     updated = [0] * number_of_kingdoms
     available = set(range(number_of_kingdoms))
