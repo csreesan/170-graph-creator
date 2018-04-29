@@ -182,7 +182,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
     #         heappush(all_dom, (val, dom_set))
 
 
-    for i in range(100000):
+    for i in range(50000):
         dom_set = random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
         val = dominating_set_value(adjacency_matrix, dom_set)
         if dom_set not in rep_check:
@@ -192,7 +192,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
 
         if len(all_dom) >= 100:
             break
-        print(len(all_dom))
+        
 
     # for i in range(10000):
     #     dom_set = random_dominating_set3(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
@@ -206,6 +206,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
     #         break
     #     top10.append(heappop(all_dom))
     # print("TOP10: ", top10)
+    print(len(all_dom))
     return all_dom
 
 
