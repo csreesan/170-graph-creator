@@ -190,7 +190,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
             if val < curr_best:
                 all_dom.append((val, dom_set))
 
-        if len(all_dom) >= 100:
+        if len(all_dom) >= 200:
             break
         
 
