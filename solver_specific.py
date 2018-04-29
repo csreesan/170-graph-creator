@@ -188,7 +188,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
         if dom_set not in rep_check:
             rep_check.add(dom_set)
             if val < curr_best:
-                all_dom.append(val, dom_set)
+                all_dom.append((val, dom_set))
 
         if len(all_dom) >= 100:
             break
