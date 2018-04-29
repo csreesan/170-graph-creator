@@ -77,7 +77,7 @@ def random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, sourc
     for i in range(number_of_kingdoms):
         neigh_cost_copy[i] -= adjacency_matrix[i][i]
         ### Extra Randomness ###
-        neighbor_cost[i] *= random.uniform(0.5,1)
+        neighbor_cost[i] *= random.uniform(0.4,1)
         ####
     updated = [0] * number_of_kingdoms
     available = set(range(number_of_kingdoms))
@@ -182,8 +182,8 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
     #         heappush(all_dom, (val, dom_set))
 
 
-    for i in range(10000):
-        dom_set = random_dominating_set4(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
+    for i in range(300000):
+        dom_set = random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
         val = dominating_set_value(adjacency_matrix, dom_set)
         if dom_set not in rep_check:
             rep_check.add(dom_set)
@@ -196,7 +196,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
     #         rep_check.add(dom_set)
     #         heappush(all_dom, (val, dom_set))
     top10 = []
-    for i in range(30):
+    for i in range(20):
         if len(all_dom) == 0:
             break
         top10.append(heappop(all_dom))
