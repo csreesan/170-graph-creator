@@ -133,6 +133,19 @@ def random_dominating_set3(neighbor_dict, neighbor_cost, adjacency_matrix, sourc
         neigh_cost_copy.pop(chosen, None)
     return frozenset(con)
 
+def random_dominating_set4(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms):
+    available = set(range(number_of_kingdoms))
+    con = set()
+    sur = set()
+    random.seed(random.random())
+    while len(sur) < number_of_kingdoms:
+        chosen = random.randint(0, len(available) - 1)
+        con.add(chosen)
+        sur.add(chosen)
+        sur.update(neighbor_dict[chosen])
+        available = available - sur
+    return frozenset(con)
+
 # def get_dom_prob(neighbor_dict, neighbor_cost, adjacency_matrix, number_of_kingdoms):
 #     return [(neighbor_cost[i])/(adjacency_matrix[i][i]) for i in range(number_of_kingdoms)]
 
@@ -155,24 +168,33 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
 
     all_dom = []
     rep_check = set()
+    # for i in range(10000):
+    #     dom_set = random_dominating_set1(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
+    #     val = dominating_set_value(adjacency_matrix, dom_set)
+    #     if dom_set not in rep_check:
+    #         rep_check.add(dom_set)
+    #         heappush(all_dom, (val, dom_set))
+    # for i in range(10000):
+    #     dom_set = random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
+    #     val = dominating_set_value(adjacency_matrix, dom_set)
+    #     if dom_set not in rep_check:
+    #         rep_check.add(dom_set)
+    #         heappush(all_dom, (val, dom_set))
+
+
     for i in range(10000):
-        dom_set = random_dominating_set1(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
+        dom_set = random_dominating_set4(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
         val = dominating_set_value(adjacency_matrix, dom_set)
         if dom_set not in rep_check:
             rep_check.add(dom_set)
             heappush(all_dom, (val, dom_set))
-    for i in range(10000):
-        dom_set = random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
-        val = dominating_set_value(adjacency_matrix, dom_set)
-        if dom_set not in rep_check:
-            rep_check.add(dom_set)
-            heappush(all_dom, (val, dom_set))
-    for i in range(10000):
-        dom_set = random_dominating_set3(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
-        val = dominating_set_value(adjacency_matrix, dom_set)
-        if dom_set not in rep_check:
-            rep_check.add(dom_set)
-            heappush(all_dom, (val, dom_set))
+
+    # for i in range(10000):
+    #     dom_set = random_dominating_set3(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
+    #     val = dominating_set_value(adjacency_matrix, dom_set)
+    #     if dom_set not in rep_check:
+    #         rep_check.add(dom_set)
+    #         heappush(all_dom, (val, dom_set))
     top10 = []
     for i in range(30):
         if len(all_dom) == 0:
