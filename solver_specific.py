@@ -77,7 +77,7 @@ def random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, sourc
     for i in range(number_of_kingdoms):
         neigh_cost_copy[i] -= adjacency_matrix[i][i]
         ### Extra Randomness ###
-        neighbor_cost[i] *= random.uniform(0.4,1)
+        neigh_cost_copy[i] *= random.uniform(0.4,1)
         ####
     updated = [0] * number_of_kingdoms
     available = set(range(number_of_kingdoms))
@@ -164,7 +164,7 @@ def dominating_set_value(adjacency_matrix, dom_set):
 
 
 
-def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp):
+def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp, curr_best):
 
     all_dom = []
     rep_check = set()
@@ -182,12 +182,17 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
     #         heappush(all_dom, (val, dom_set))
 
 
-    for i in range(300000):
+    for i in range(100000):
         dom_set = random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
         val = dominating_set_value(adjacency_matrix, dom_set)
         if dom_set not in rep_check:
             rep_check.add(dom_set)
-            heappush(all_dom, (val, dom_set))
+            if val < curr_best:
+                all_dom.append(val, dom_set)
+
+        if len(all_dom) >= 100:
+            break
+        print(len(all_dom))
 
     # for i in range(10000):
     #     dom_set = random_dominating_set3(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
@@ -195,13 +200,13 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
     #     if dom_set not in rep_check:
     #         rep_check.add(dom_set)
     #         heappush(all_dom, (val, dom_set))
-    top10 = []
-    for i in range(20):
-        if len(all_dom) == 0:
-            break
-        top10.append(heappop(all_dom))
-    print("TOP10: ", top10)
-    return top10
+    # top10 = []
+    # for i in range(20):
+    #     if len(all_dom) == 0:
+    #         break
+    #     top10.append(heappop(all_dom))
+    # print("TOP10: ", top10)
+    return all_dom
 
 
 
@@ -303,13 +308,13 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, file_list):
             path_dict = pickle.Unpickler( open( poly_path + "shortest_path_dict/" + file_num + "_path_dict.p", "rb" ) ).load()
             curr_best = output_cost(file_num, dist_dict, adjacency_matrix)
 
-            top10_dom = best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp)
+            top10_dom = best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_kingdoms, adjacency_matrix, temp, curr_best)
             for dom_cost, dom_set in top10_dom:
                 if dom_cost >= curr_best:
                     print("Skipping: ", len(dom_set))
                     continue
                 cycle_tup = None
-                if len(dom_set) < 11:
+                if len(dom_set) < 12:
                     
                     dom_list = list(dom_set)
                     if source_index in dom_set:
