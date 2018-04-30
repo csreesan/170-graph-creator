@@ -54,12 +54,13 @@ def solve_for_cycle(dom_set, dist_dict, source):
     dom_list = list(dom_set)
     ncity = len(dom_list)        # Number of cities to visit
     maxTsteps = 120    # Temperature is lowered not more than maxTsteps
-    Tstart = 0.8       # Starting temperature - has to be high enough
+    #Tstart = 0.8       # Starting temperature - has to be high enough
+    Tstart = 1.2
     fCool = 0.9        # Factor to multiply temperature at each cooling step
     maxSteps = 100*ncity     # Number of steps at constant temperature
     maxAccepted = 10*ncity   # Number of accepted steps at constant temperature
 
-    Preverse = 0.5      # How often to choose reverse/transpose trial move
+    Preverse = 0.7      # How often to choose reverse/transpose trial move
 
 
     # Distance of the travel at the beginning
