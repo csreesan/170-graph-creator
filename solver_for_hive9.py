@@ -5,5 +5,5 @@ from solver_specific import solver
 
 #file_list = [692, 665, 678]
 #file_list = ['636', '663', '664', '670', '699']
-file_list = ['510', '512', '609']
+file_list = ['471', '487', '490', '511', '526']
 solver("./curr_hive9.txt", "./iter_hive9.txt", "./beaten_hive9.txt", "./outputs/", False, file_list)
