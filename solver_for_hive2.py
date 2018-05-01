@@ -5,7 +5,7 @@ from solver_specific import solver
 
 
 #file_list = ['99', '127', '157', '181']  
-file_list = ['58', '164', '169', '198', '235', '236']
+file_list = ['57', '58', '60', '61', '62', '610']
 
 
 
