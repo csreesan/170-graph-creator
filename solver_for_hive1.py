@@ -4,5 +4,6 @@ from solver_specific import solver
 #file_list = [3, 18, 741]
 
 
-file_list = ['39', '43', '45', '180'] 
+#file_list = ['39', '43', '45', '180'] 
+file_list = ['6', '7']       
 solver("./curr_hive1.txt", "./iter_hive1.txt", "./beaten_hive1.txt", "./outputs/", False, file_list)
