@@ -329,7 +329,7 @@ def solver(curr_file, iter_file, beaten_file, write_to, poly2, file_list):
                     print("Skipping: ", len(dom_set))
                     continue
                 cycle_tup = None
-                if len(dom_set) < 12:
+                if len(dom_set) < 11:
                     
                     dom_list = list(dom_set)
                     if source_index in dom_set:
