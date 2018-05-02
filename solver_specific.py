@@ -168,25 +168,25 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
 
     all_dom = []
     rep_check = set()
-    for i in range(2000):
-        dom_set = random_dominating_set1(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
-        val = dominating_set_value(adjacency_matrix, dom_set)
-        if dom_set not in rep_check:
-            rep_check.add(dom_set)
-            if val < curr_best:
-                all_dom.append((val, dom_set))
-        if len(all_dom) >= 20:
-            break
+    # for i in range(2000):
+    #     dom_set = random_dominating_set1(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
+    #     val = dominating_set_value(adjacency_matrix, dom_set)
+    #     if dom_set not in rep_check:
+    #         rep_check.add(dom_set)
+    #         if val < curr_best:
+    #             all_dom.append((val, dom_set))
+    #     if len(all_dom) >= 20:
+    #         break
             
-    for i in range(2000):
-        dom_set = random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
-        val = dominating_set_value(adjacency_matrix, dom_set)
-        if dom_set not in rep_check:
-            rep_check.add(dom_set)
-            if val < curr_best:
-                all_dom.append((val, dom_set))
-        if len(all_dom) >= 40:
-            break
+    # for i in range(2000):
+    #     dom_set = random_dominating_set2(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
+    #     val = dominating_set_value(adjacency_matrix, dom_set)
+    #     if dom_set not in rep_check:
+    #         rep_check.add(dom_set)
+    #         if val < curr_best:
+    #             all_dom.append((val, dom_set))
+    #     if len(all_dom) >= 40:
+    #         break
 
 
     for i in range(2000):
@@ -196,7 +196,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
             rep_check.add(dom_set)
             if val < curr_best:
                 all_dom.append((val, dom_set))
-        if len(all_dom) >= 60:
+        if len(all_dom) >= 50:
             break
 
     # for i in range(2000):
