@@ -106,9 +106,9 @@ def random_dominating_set3(neighbor_dict, neighbor_cost, adjacency_matrix, sourc
     random.seed(random.random())
     neigh_cost_copy = dict(neighbor_cost)
     for i in range(number_of_kingdoms):
-        # neigh_cost_copy[i] -= adjacency_matrix[i][i]
+        neigh_cost_copy[i] -= adjacency_matrix[i][i]
         ### Extra Randomness ###
-        neighbor_cost[i] *= random.uniform(0.1,1)
+        neighbor_cost[i] *= random.uniform(0.8,1)
         ####
     updated = [0] * number_of_kingdoms
     available = set(range(number_of_kingdoms))
@@ -189,7 +189,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
     #         break
 
 
-    for i in range(5000):
+    for i in range(20000):
         dom_set = random_dominating_set3(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
         val = dominating_set_value(adjacency_matrix, dom_set)
         if dom_set not in rep_check:
