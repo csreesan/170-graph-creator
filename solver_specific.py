@@ -189,7 +189,7 @@ def best_dominating_set(neighbor_dict, neighbor_cost, source_index, number_of_ki
     #         break
 
 
-    for i in range(2000):
+    for i in range(5000):
         dom_set = random_dominating_set3(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms)
         val = dominating_set_value(adjacency_matrix, dom_set)
         if dom_set not in rep_check:
