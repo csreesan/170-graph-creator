@@ -128,9 +128,10 @@ def random_dominating_set3(neighbor_dict, neighbor_cost, adjacency_matrix, sourc
                 for i in neighbor_dict[n]:
                     if i in neigh_cost_copy:
                         neigh_cost_copy[i] -= adjacency_matrix[n][n]
+            neigh_cost_copy.pop(n, None)
 
         sur.update(neighbors)
-        neigh_cost_copy.pop(chosen, None)
+        
     return frozenset(con)
 
 def random_dominating_set4(neighbor_dict, neighbor_cost, adjacency_matrix, source_index, number_of_kingdoms):
