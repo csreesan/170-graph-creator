@@ -5,8 +5,9 @@ from solver_specific import solver
 
 
 #file_list = ['39', '43', '45', '180'] 
-#file_list = ['6', '7']  
-file_list = ['6', '7', '39', '40', '43', '609']  
+#file_list = ['6', '7'] 
+#6, 7 
+file_list = ['39', '40', '43', '609']  
 
 
    
